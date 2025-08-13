@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -69,15 +70,15 @@ The data tells a clear story:
 
 **Sample Size:** 29,408 respondents
 """)
+
 st.markdown("---")
 
 # --------------------
-# Main Sources of Income (Horizontal)
+# Main Sources of Income
 # --------------------
 st.subheader("Main Sources of Income")
 income_counts = df["E10"].value_counts().reset_index()
 income_counts.columns = ["Income Source", "Count"]
-
 fig_income = px.bar(
     income_counts.head(10),
     x="Count",
@@ -85,24 +86,24 @@ fig_income = px.bar(
     orientation="h",
     color="Count",
     color_continuous_scale="Greens",
-    title="Top 10 Income Sources in Nigeria"
+    title="Top 10 Income Sources in Nigeria",
+    width=1000,
+    height=700
 )
 fig_income.update_layout(
     xaxis_title="Number of Respondents",
     yaxis_title="Income Source",
     plot_bgcolor="white",
-    font=dict(size=14),
-    yaxis=dict(categoryorder='total ascending')
+    font=dict(size=14)
 )
 st.plotly_chart(fig_income, use_container_width=True)
 
 # --------------------
-# COVID-19 Business Challenges (Horizontal)
+# COVID-19 Business Challenges
 # --------------------
 st.subheader("COVID-19 Business Challenges")
 challenges = df["E13e"].value_counts().reset_index()
 challenges.columns = ["Challenge", "Count"]
-
 fig_challenges = px.bar(
     challenges.head(10),
     x="Count",
@@ -110,14 +111,15 @@ fig_challenges = px.bar(
     orientation="h",
     color="Count",
     color_continuous_scale="Oranges",
-    title="Top 10 Challenges Faced During COVID-19"
+    title="Top 10 Challenges Faced During COVID-19",
+    width=1000,
+    height=700
 )
 fig_challenges.update_layout(
     xaxis_title="Number of Respondents",
     yaxis_title="Challenge",
     plot_bgcolor="white",
-    font=dict(size=14),
-    yaxis=dict(categoryorder='total ascending')
+    font=dict(size=14)
 )
 st.plotly_chart(fig_challenges, use_container_width=True)
 
@@ -135,28 +137,39 @@ if "E13f" in df.columns:
         orientation="h",
         color="Count",
         color_continuous_scale="RdBu",
-        title="Optimism vs Pessimism in Recovery"
+        title="Optimism vs Pessimism in Recovery",
+        width=1000,
+        height=700
     )
     fig_attitudes.update_layout(
         xaxis_title="Number of Respondents",
         yaxis_title="Attitude",
         plot_bgcolor="white",
-        font=dict(size=14),
-        yaxis=dict(categoryorder='total ascending')
+        font=dict(size=14)
     )
     st.plotly_chart(fig_attitudes, use_container_width=True)
 
 # --------------------
-# Heatmap (E10 vs E13e)
+# Heatmap (Top 10 E10 vs Top 10 E13e)
 # --------------------
 if "E10" in df.columns and "E13e" in df.columns:
-    st.subheader("Income Source vs COVID-19 Challenges Heatmap")
-    heatmap_data = pd.crosstab(df["E10"], df["E13e"])
+    st.subheader("Top 10 Income Sources vs Top 10 COVID-19 Challenges Heatmap")
+
+    top_income = df["E10"].value_counts().head(10).index
+    top_challenges = df["E13e"].value_counts().head(10).index
+
+    df_filtered = df[df["E10"].isin(top_income) & df["E13e"].isin(top_challenges)]
+    heatmap_data = pd.crosstab(df_filtered["E10"], df_filtered["E13e"])
+    heatmap_data = heatmap_data.loc[top_income, top_challenges]
+
     fig_heatmap = px.imshow(
         heatmap_data,
         labels=dict(x="COVID-19 Challenge", y="Income Source", color="Count"),
         aspect="auto",
         color_continuous_scale="YlGnBu",
-        title="Challenge Distribution Across Income Sources"
+        title="Top 10 Income Sources vs Top 10 COVID-19 Challenges",
+        width=1000,
+        height=800
     )
+
     st.plotly_chart(fig_heatmap, use_container_width=True)
