@@ -7,7 +7,7 @@ Original file is located at
     https://colab.research.google.com/drive/1SSfaAOpYmD9OHulVhfMoCOUYBbHXhFO7
 """
 
-!pip install streamlit plotly pandas pyngrok
+
 
 # 2. Write the Streamlit app to a file
 with open("app.py", "w") as f:
