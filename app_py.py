@@ -92,7 +92,7 @@ files.upload()  # Select your DATA.csv
 
 # 4. Run Streamlit with ngrok tunnel
 from pyngrok import ngrok
-!streamlit run app.py &
+# !streamlit run app.py &
 
 public_url = ngrok.connect(8501)
 print(f"Streamlit app is live here: {public_url}")
