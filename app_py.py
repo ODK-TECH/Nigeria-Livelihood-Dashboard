@@ -87,7 +87,7 @@ Cash remains the dominant payment method, limiting access to digital financial t
 """)
 
 # 3. Upload your DATA.csv file
-from google.colab import files
+#from google.colab import files
 files.upload()  # Select your DATA.csv
 
 # 4. Run Streamlit with ngrok tunnel
